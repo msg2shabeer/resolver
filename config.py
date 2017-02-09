@@ -25,3 +25,6 @@ CSRF_SESSION_KEY = "secret"
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
+
+# Setting the modification tracking flag to true, mainly to disable the warning
+SQLALCHEMY_TRACK_MODIFICATIONS=True
