@@ -7,7 +7,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Define the database - we are working with
 # SQLite for this example
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'resolver.db')
+# SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'resolver.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///resolver.db'
 DATABASE_CONNECT_OPTIONS = {}
 
 # Application threads. A common general assumption is
@@ -25,6 +26,3 @@ CSRF_SESSION_KEY = "secret"
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
-
-# Setting the modification tracking flag to true, mainly to disable the warning
-SQLALCHEMY_TRACK_MODIFICATIONS=True
