@@ -71,4 +71,35 @@ class Complaint(db.Model):
 
 	def __repr__(self):
 		return '<Complaint id:%r p:%r d:%r c_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id)
+
+class Service(db.Model):
+	"""Service"""
+
+	id=db.Column(db.Integer, primary_key=True)
+	name=db.Column(db.String(20), unique=True)
+
+	def __init__(self, name):
+		self.name=name
+		
+class ComplaintType(db.Model):
+	"""ComplaintType"""
+	
+	id=db.Column(db.Integer, primary_key=True)
+	name=db.Column(db.String(20), unique=True)
+	service_id=db.Column(db.Integer, db.ForeignKey('service,id'))
+	service=db.relationship('Service', backref=db.backref('complaint_types', lazy=dynamic))
+	
+	def __init__(self, name, service_id):
+		self.name=name
+		self.service_id=service_id
+		
+		
+class ComplaintStatus(db.Model):
+	"""ComplaintStatus"""
+	
+	id=db.Column(db.Integer, primary_key=True)
+	name=db.Column(db.String(20), unique=True)
+
+	def __init__(self, name):
+		self.name=name
 		
