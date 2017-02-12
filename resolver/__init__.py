@@ -48,16 +48,16 @@ class Complaint(db.Model):
 	complaint_phone=db.Column(db.String(15))
 	no_calls=db.Column(db.Integer, default=1)
 	date_time=db.Column(db.DateTime)
-	priority=db.Column(db.Float, default=0.0)
+	priority=db.Column(db.Float, default=0.00)
 	
 	service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
-	service=db.relationship('Service', backref=db.backref('complaints', lazy=dynamic))
+	service=db.relationship('Service', backref=db.backref('complaints', lazy='dynamic'))
 	
-	complaint_type_id=db.Column(db.Integer, db.ForeignKey('compaint_type.id'))
-	compaint_type=db.relationship('ComplaintType', backref=db.backref('complaints', lazy=dynamic))
+	complaint_type_id=db.Column(db.Integer, db.ForeignKey('complaint_type.id'))
+	compaint_type=db.relationship('ComplaintType', backref=db.backref('complaints', lazy='dynamic'))
 	
-	status_id=db.Column(db.Integer, db.ForeignKey('compaint_status.id'))
-	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy=dynamic))
+	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
+	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
 
 	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, date_time=None):
 		self.cust_id=cust_id
@@ -86,8 +86,8 @@ class ComplaintType(db.Model):
 	
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
-	service_id=db.Column(db.Integer, db.ForeignKey('service,id'))
-	service=db.relationship('Service', backref=db.backref('complaint_types', lazy=dynamic))
+	service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
+	service=db.relationship('Service', backref=db.backref('complaint_types', lazy='dynamic'))
 	
 	def __init__(self, name, service_id):
 		self.name=name
