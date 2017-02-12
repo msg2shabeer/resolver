@@ -47,7 +47,7 @@ class Complaint(db.Model):
 	cust_phone=db.Column(db.String(15))
 	complaint_phone=db.Column(db.String(15))
 	no_calls=db.Column(db.Integer, default=1)
-	date_time.db.Column(db.DateTime)
+	date_time=db.Column(db.DateTime)
 	priority=db.Column(db.Float, default=0.0)
 	
 	service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
