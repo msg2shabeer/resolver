@@ -1,7 +1,7 @@
-import resolver
+from resolver import app
 
 # Home
-@resolver.app.route('/')
+@app.route('/')
 def hello_world():
 	return 'Welcome to resolver'
 
