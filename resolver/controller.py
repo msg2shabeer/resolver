@@ -14,6 +14,10 @@ def get_users():
 	return users
 
 # Get a single user
+@app.route('/user/<int:id>', methods = ['GET'])
+def get_user(id):
+	user = jsonify({'user':[UserJsonSerializer().serialize(x) for x in User.query.filter_by(id=id)]})
+	return user
 
 # Add a new user
 
