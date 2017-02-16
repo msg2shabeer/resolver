@@ -1,5 +1,5 @@
 from resolver import app
-from resolver.models import User
+from resolver.models import User, UserJsonSerializer
 from flask import jsonify
 # Home
 @app.route('/')
@@ -9,7 +9,9 @@ def hello_world():
 # Get all users
 @app.route('/users/', methods = ['GET'])
 def get_users():
-	return jsonify({'users': User.query.all()})
+	users=jsonify([UserJsonSerializer().serialize(x) for x in User.query.all()])
+	# to debug , we could use app.logger.debug(users.get_data())
+	return users
 
 # Get a single user
 

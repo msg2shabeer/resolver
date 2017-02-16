@@ -1,5 +1,6 @@
 from resolver import db
 from datetime import datetime
+from resolver.json_serializer import JsonSerializer
 
 
 class User(db.Model):
@@ -20,6 +21,12 @@ class User(db.Model):
 
 	def __repr__(self):
 		return '<User %r>' % self.user_name
+
+class UserJsonSerializer(JsonSerializer):
+    __attributes__ = ['id', 'name', 'user_name', 'password','user_type_id']
+    __required__ = ['id', 'name', 'user_name', 'password']
+    __attribute_serializer__ = dict()
+    __object_class__ = User
 
 class UserType(db.Model):
 	"""Table storing category details of users"""
