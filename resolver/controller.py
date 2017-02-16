@@ -1,6 +1,7 @@
 from resolver import app
 from resolver.models import User, UserJsonSerializer
-from flask import jsonify
+from flask import jsonify,request
+from resolver import db
 # Home
 @app.route('/')
 def hello_world():
@@ -20,6 +21,11 @@ def get_user(id):
 	return user
 
 # Add a new user
+@app.route('/user/add', methods = ['POST'])
+def put_user():
+	db.session.add(User(**request.json))
+	db.session.commit()
+	return jsonify({'message' :'User Created successfully'}), 200
 
 # Get all complaints
 
