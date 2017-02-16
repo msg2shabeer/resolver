@@ -9,7 +9,7 @@ def hello_world():
 # Get all users
 @app.route('/users/', methods = ['GET'])
 def get_users():
-	users=jsonify([UserJsonSerializer().serialize(x) for x in User.query.all()])
+	users=jsonify({'users':[UserJsonSerializer().serialize(x) for x in User.query.all()]})
 	# to debug , we could use app.logger.debug(users.get_data())
 	return users
 
