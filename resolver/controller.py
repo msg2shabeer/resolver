@@ -1,5 +1,5 @@
 from resolver import app
-from resolver.models import User, UserJsonSerializer
+from resolver.models import User, UserJsonSerializer, Complaint
 from flask import jsonify,request
 from resolver import db
 # Home
@@ -34,3 +34,8 @@ def put_user():
 # Get complaints by customer ID
 
 # Add a complaint
+@app.route('/complaint/add',methods = ['POST'])
+def put_complaint():
+	db.session.add(Complaint(**request.json))
+	db.session.commit()
+	return jsonify({'message' : 'Complaint Created Successfully'}), 200
