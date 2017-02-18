@@ -23,7 +23,7 @@ def get_user(id):
 # Add a new user
 @app.route('/user/add', methods = ['POST'])
 def put_user():
-	db.session.add(User(**request.json))
+	db.session.add(UserJsonSerializer().deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' :'User Created successfully'}), 200
 
