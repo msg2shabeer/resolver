@@ -60,15 +60,19 @@ class Complaint(db.Model):
 	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
 	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
 
-	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, date_time=None):
+	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id, complaint_type_id, status_id, date_time=None):
 		self.cust_id=cust_id
 		self.cust_name=cust_name
 		self.cust_address=cust_address
 		self.cust_phone=cust_phone
 		self.complaint_phone=complaint_phone
+		self.service_id=service_id
+		self.complaint_type_id=complaint_type_id
+		self.status_id=status_id
 		if date_time is None:
 			date_time=datetime.utcnow()
 		self.date_time=date_time
+
 
 	def __repr__(self):
 		return '<Complaint id:%r p:%r d:%r c_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id)
