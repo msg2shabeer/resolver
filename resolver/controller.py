@@ -1,5 +1,5 @@
 from resolver import app
-from resolver.models import User, UserJsonSerializer
+from resolver.models import *
 from flask import jsonify
 # Home
 @app.route('/')

@@ -4,14 +4,13 @@ from resolver.json_serializer import JsonSerializer
 
 
 class User(db.Model):
-	"""User table to store the user information, includes admin and staffs"""
+	'''User table to store the user information, includes admin and staffs'''
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(25))
 	user_name=db.Column(db.String(20), unique=True)
 	password=db.Column(db.String(40))
 	user_type_id=db.Column(db.Integer,db.ForeignKey('user_type.id'))
-	user_type = db.relationship('UserType',
-        backref=db.backref('users', lazy='dynamic'))
+	user_type = db.relationship('UserType',backref=db.backref('users', lazy='dynamic'))
 	
 	def __init__(self, name, user_name, password, user_type_id):
 		self.name=name
@@ -23,13 +22,13 @@ class User(db.Model):
 		return '<User %r>' % self.user_name
 
 class UserJsonSerializer(JsonSerializer):
-    __attributes__ = ['id', 'name', 'user_name', 'password','user_type_id']
-    __required__ = ['id', 'name', 'user_name', 'password']
-    __attribute_serializer__ = dict()
-    __object_class__ = User
+	__attributes__ = ['id', 'name', 'user_name', 'password','user_type_id']
+	__required__ = ['name', 'user_name', 'password', 'user_type_id']
+	__attribute_serializer__ = dict()
+	__object_class__ = User
 
 class UserType(db.Model):
-	"""Table storing category details of users"""
+	'''Table storing category details of users'''
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(25))
 
@@ -39,8 +38,15 @@ class UserType(db.Model):
 	def __repr__(self):
 		return '<User Type %r>' % self.name
 
+class UserTypeJsonSerializer(JsonSerializer):
+	__attributes__ = ['id', 'name']
+	__required__ = ['name']
+	__attribute_serializer__ = dict()
+	__object_class__ = UserType
+		
+
 class Complaint(db.Model):
-	"""Complaints table"""
+	'''Complaints table'''
 	id=db.Column(db.Integer, primary_key=True)
 	cust_id=db.Column(db.String(25))
 	cust_name=db.Column(db.String(30))
@@ -60,7 +66,7 @@ class Complaint(db.Model):
 	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
 	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
 
-	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id, complaint_type_id, status_id, date_time=None):
+	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id, complaint_type_id, date_time=None):
 		self.cust_id=cust_id
 		self.cust_name=cust_name
 		self.cust_address=cust_address
@@ -68,7 +74,6 @@ class Complaint(db.Model):
 		self.complaint_phone=complaint_phone
 		self.service_id=service_id
 		self.complaint_type_id=complaint_type_id
-		self.status_id=status_id
 		if date_time is None:
 			date_time=datetime.utcnow()
 		self.date_time=date_time
@@ -77,17 +82,31 @@ class Complaint(db.Model):
 	def __repr__(self):
 		return '<Complaint id:%r p:%r d:%r c_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id)
 
+class ComplaintJsonSerializer(JsonSerializer):
+	__attributes__ = ['id', 'cust_id', 'cust_name', 'cust_address', 'cust_phone',\
+	 'complaint_phone', 'no_calls', 'priority', 'date_time' 'service_id', 'complaint_type_id', 'status_id']
+	__required__ = ['cust_id', 'cust_name', 'cust_address', 'cust_phone',\
+	 'complaint_phone', 'date_time' 'service_id', 'complaint_type_id']
+	__attribute_serializer__ = dict(date_time='date')
+	__object_class__ = Complaint
+
 class Service(db.Model):
-	"""Service"""
+	'''Service'''
 
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
 
 	def __init__(self, name):
 		self.name=name
+
+class ServiceJsonSerializer(JsonSerializer):
+	__attributes__=['id', 'name']
+	__required__=['name']
+	__attribute_serializer__=dict()
+	__object_class__=Service
 		
 class ComplaintType(db.Model):
-	"""ComplaintType"""
+	'''ComplaintType'''
 	
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
@@ -97,13 +116,25 @@ class ComplaintType(db.Model):
 	def __init__(self, name, service_id):
 		self.name=name
 		self.service_id=service_id
+
+class ComplaintTypeJsonSerializer(JsonSerializer):
+	__attributes__=['id', 'name', 'service_id']
+	__required__=['name', 'service_id']
+	__attribute_serializer__=dict()
+	__object_class__=ComplaintType
 		
 		
 class ComplaintStatus(db.Model):
-	"""ComplaintStatus"""
+	'''ComplaintStatus'''
 	
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
 
 	def __init__(self, name):
 		self.name=name
+
+class ComplaintStatusJsonSerializer(JsonSerializer):
+	__attributes__=['id', 'name']
+	__required__=['name']
+	__attribute_serializer__=dict()
+	__object_class__=ComplaintStatus
