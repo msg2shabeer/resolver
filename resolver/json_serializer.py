@@ -54,10 +54,10 @@ class JsonSerializer(object):
             ValueError: If any of the required attributes are not present
         """
         d = dict()
-        for attr in self.__attributes__:
+        for attr in self.__required__:
             if attr in json:
                 val = json[attr]
-            elif attr in self.__required__:
+            elif attr in kwargs:
                 try:
                     val = kwargs[attr]
                 except KeyError:
