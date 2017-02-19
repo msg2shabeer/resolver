@@ -57,7 +57,7 @@ class JsonSerializer(object):
         for attr in self.__required__:
             if attr in json:
                 val = json[attr]
-            elif attr in kwargs:
+            else:
                 try:
                     val = kwargs[attr]
                 except KeyError:
