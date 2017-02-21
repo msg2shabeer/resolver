@@ -84,9 +84,9 @@ class Complaint(db.Model):
 
 class ComplaintJsonSerializer(JsonSerializer):
 	__attributes__ = ['id', 'cust_id', 'cust_name', 'cust_address', 'cust_phone',\
-	 'complaint_phone', 'no_calls', 'priority', 'date_time' 'service_id', 'complaint_type_id', 'status_id']
+	 'complaint_phone', 'no_calls', 'priority', 'date_time', 'service_id', 'complaint_type_id', 'status_id']
 	__required__ = ['cust_id', 'cust_name', 'cust_address', 'cust_phone',\
-	 'complaint_phone', 'date_time' 'service_id', 'complaint_type_id']
+	 'complaint_phone', 'date_time', 'service_id', 'complaint_type_id']
 	__attribute_serializer__ = dict(date_time='date')
 	__object_class__ = Complaint
 
