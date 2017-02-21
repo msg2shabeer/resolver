@@ -23,7 +23,7 @@ def get_user(id):
 # Add a new user
 @app.route('/user/add', methods = ['POST'])
 def put_user():
-	db.session.add(UserJsonSerializer().deserialize(request.json))
+	db.session.add(UserJsonSerializer().deserialize(orequest.json))
 	db.session.commit()
 	return jsonify({'message' :'User Created successfully'}), 200
 
@@ -39,3 +39,7 @@ def put_complaint():
 	db.session.add(Complaint(**request.json))
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Created Successfully'}), 200
+
+# Change complaint status
+
+# Get complaint by it's id
