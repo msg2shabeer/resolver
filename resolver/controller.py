@@ -40,7 +40,11 @@ def get_complaint(id):
 	return complaint
 
 # Get complaints by customer ID
-
+@app.route('/complaints/cust/<int:id>', methods = ['GET'])
+def get_complaint_cust(id):
+	complaint = jsonify({'complaint':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.filter_by(id=id)]})
+	return complaint
+	
 # Add a complaint
 @app.route('/complaint/add',methods = ['POST'])
 def put_complaint():
