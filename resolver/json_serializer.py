@@ -28,7 +28,8 @@ class JsonSerializer(object):
     """The class that the deserializer should generate.
     The implementor needs to provide these."""
 
-    # __utc_offset__ = None
+    __utc_offset__ = dict()
+
     """The utc offset for timezone, provided at the time of object creation"""
 
     serializers = dict(
@@ -37,7 +38,7 @@ class JsonSerializer(object):
                             deserialize=lambda x: uuid.UUID(hex=x).bytes
                         ),
                         date=dict(
-                            serialize=def m(self,x,s=self: (x+timedelta(**s.__utc_offset__)).isoformat(),
+                            serialize=lambda x,u=__utc_offset__: (x+timedelta(**u)).isoformat('#'),
                             deserialize=lambda x: dateutil.parser.parse(x)
                         )
                     )
@@ -98,7 +99,6 @@ class JsonSerializer(object):
                 d[attr] = val
 
         return d
+    
 
-    def __init__(self, utc_offset=None):
-        if utc_offset:
-            self.__utc_offset__=utc_offset
+    

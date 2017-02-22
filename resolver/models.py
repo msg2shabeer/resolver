@@ -90,6 +90,11 @@ class ComplaintJsonSerializer(JsonSerializer):
 	__attribute_serializer__ = dict(date_time='date')
 	__object_class__ = Complaint
 
+	def __init__(self, utc_offset=None):
+		if utc_offset:
+			self.__utc_offset__=utc_offset
+
+
 class Service(db.Model):
 	'''Service'''
 
