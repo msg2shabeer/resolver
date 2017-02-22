@@ -44,11 +44,11 @@ def get_complaint(id):
 def get_complaint_cust(id):
 	complaint = jsonify({'complaint':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.filter_by(id=id)]})
 	return complaint
-	
+
 # Add a complaint
 @app.route('/complaint/add',methods = ['POST'])
 def put_complaint():
-	db.session.add(Complaint(**request.json))
+	db.session.add(ComplaintJsonSerializer.deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Created Successfully'}), 200
 
