@@ -34,6 +34,10 @@ def get_complaints():
 	return complaints
 
 # Get a single complaint by its ID
+@app.route('/complaint/<int:id>', methods = ['GET'])
+def get_complaint(id):
+	complaint = jsonify({'complaint':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.filter_by(id=id)]})
+	return complaint
 
 # Get complaints by customer ID
 
