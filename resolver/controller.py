@@ -23,11 +23,15 @@ def get_user(id):
 # Add a new user
 @app.route('/user/add', methods = ['POST'])
 def put_user():
-	db.session.add(UserJsonSerializer().deserialize(orequest.json))
+	db.session.add(UserJsonSerializer().deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' :'User Created successfully'}), 200
 
 # Get all complaints
+@app.route('/complaints/', methods=['GET'])
+def get_complaints():
+	complaints=jsonify({'complaints':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.all()]})
+	return complaints
 
 # Get a single complaint by its ID
 

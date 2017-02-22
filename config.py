@@ -30,4 +30,7 @@ SECRET_KEY = "secret"
 # Setting the modification tracking flag to true, mainly to disable the warning
 SQLALCHEMY_TRACK_MODIFICATIONS=True
 
+# Setting the timezone UTC Offset for serializing the date and time
+UTC_OFFSET=dict(hours=5, minutes=30)
+
 

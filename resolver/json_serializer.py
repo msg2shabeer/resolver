@@ -1,3 +1,4 @@
+from datetime import timedelta
 import dateutil.parser
 
 class JsonSerializer(object):
@@ -27,13 +28,16 @@ class JsonSerializer(object):
     """The class that the deserializer should generate.
     The implementor needs to provide these."""
 
+    # __utc_offset__ = None
+    """The utc offset for timezone, provided at the time of object creation"""
+
     serializers = dict(
                         id=dict(
                             serialize=lambda x: uuid.UUID(bytes=x).hex,
                             deserialize=lambda x: uuid.UUID(hex=x).bytes
                         ),
                         date=dict(
-                            serialize=lambda x, tz: x.isoformat(),
+                            serialize=def m(self,x,s=self: (x+timedelta(**s.__utc_offset__)).isoformat(),
                             deserialize=lambda x: dateutil.parser.parse(x)
                         )
                     )
@@ -94,3 +98,7 @@ class JsonSerializer(object):
                 d[attr] = val
 
         return d
+
+    def __init__(self, utc_offset=None):
+        if utc_offset:
+            self.__utc_offset__=utc_offset
