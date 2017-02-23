@@ -46,16 +46,18 @@ def get_complaint_cust(id):
 	return complaint
 
 # Add a complaint --- Check for existing complaint
-@app.route('/complaints/',methods = ['POST'])
+@app.route('/complaints/', methods = ['POST'])
 def put_complaint():
 	db.session.add(ComplaintJsonSerializer().deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Created Successfully'}), 200
 
 # Change complaint status
-@app.route('/complaints/<int:id>/status/<int:status_id>',methods = ['PUT'])
-def change_complaint_status(id, status_id):
+@app.route('/complaints/<int:id>/status/',methods = ['PUT'])
+def change_complaint_status(id):
 	complaint=Complaint.query.filter_by(id=id)
-	complaint.status=status_id
+	for c in complaint:
+		c.status_id=request.json['status_id']
+		db.session.add(c)
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Status Changed Successfully'}), 200
