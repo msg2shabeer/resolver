@@ -48,7 +48,7 @@ def get_complaint_cust(id):
 # Add a complaint
 @app.route('/complaint/add',methods = ['POST'])
 def put_complaint():
-	db.session.add(ComplaintJsonSerializer.deserialize(request.json))
+	db.session.add(ComplaintJsonSerializer().deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Created Successfully'}), 200
 
