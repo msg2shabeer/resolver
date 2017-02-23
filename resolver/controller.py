@@ -15,13 +15,13 @@ def get_users():
 	return users
 
 # Get a single user
-@app.route('/user/<int:id>', methods = ['GET'])
+@app.route('/users/<int:id>', methods = ['GET'])
 def get_user(id):
 	user = jsonify({'user':[UserJsonSerializer().serialize(x) for x in User.query.filter_by(id=id)]})
 	return user
 
 # Add a new user
-@app.route('/user/add', methods = ['POST'])
+@app.route('/users/', methods = ['POST'])
 def put_user():
 	db.session.add(UserJsonSerializer().deserialize(request.json))
 	db.session.commit()
@@ -34,7 +34,7 @@ def get_complaints():
 	return complaints
 
 # Get a single complaint by its ID
-@app.route('/complaint/<int:id>', methods = ['GET'])
+@app.route('/complaints/<int:id>', methods = ['GET'])
 def get_complaint(id):
 	complaint = jsonify({'complaint':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.filter_by(id=id)]})
 	return complaint
@@ -45,13 +45,17 @@ def get_complaint_cust(id):
 	complaint = jsonify({'complaint':[ComplaintJsonSerializer(utc_offset=app.config['UTC_OFFSET']).serialize(x) for x in Complaint.query.filter_by(id=id)]})
 	return complaint
 
-# Add a complaint
-@app.route('/complaint/add',methods = ['POST'])
+# Add a complaint --- Check for existing complaint
+@app.route('/complaints/',methods = ['POST'])
 def put_complaint():
 	db.session.add(ComplaintJsonSerializer().deserialize(request.json))
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Created Successfully'}), 200
 
 # Change complaint status
-
-# Get complaint by it's id
+@app.route('/complaints/<int:id>/status/<int:status_id>',methods = ['PUT'])
+def change_complaint_status(id, status_id):
+	complaint=Complaint.query.filter_by(id=id)
+	complaint.status=status_id
+	db.session.commit()
+	return jsonify({'message' : 'Complaint Status Changed Successfully'}), 200
