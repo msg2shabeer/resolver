@@ -55,9 +55,10 @@ def put_complaint():
 # Change complaint status
 @app.route('/complaints/<int:id>/status/',methods = ['PUT'])
 def change_complaint_status(id):
-	complaint=Complaint.query.filter_by(id=id)
-	for c in complaint:
-		c.status_id=request.json['status_id']
-		db.session.add(c)
+	complaint=Complaint.query.filter_by(id=id).first() #return first result
+	if not complaint:
+		return jsonify({'message' : 'Complaint Status Changing failed, there is no such complaint'}), 200
+	complaint.status_id = request.json['status_id']
+	db.session.add(complaint)
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Status Changed Successfully'}), 200
