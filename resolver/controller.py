@@ -11,7 +11,6 @@ def hello_world():
 @app.route('/users/', methods = ['GET'])
 def get_users():
 	users=jsonify({'users':[UserJsonSerializer().serialize(x) for x in User.query.all()]})
-	# to debug , we could use app.logger.debug(users.get_data())
 	return users, 200
 
 # Get a single user
@@ -23,9 +22,13 @@ def get_user(id):
 # Add a new user
 @app.route('/users/', methods = ['POST'])
 def put_user():
-	db.session.add(UserJsonSerializer().deserialize(request.json))
-	db.session.commit()
-	return jsonify({'message' :'User Created successfully'}), 201
+	try:
+		db.session.add(UserJsonSerializer().deserialize(request.json))
+		db.session.commit()
+	except Exception as e:
+		return jsonify({'message' : 'User Creation Failed'}), 500
+	else:
+		return jsonify({'message' :'User Created successfully'}), 201
 
 # Get all complaints
 @app.route('/complaints/', methods=['GET'])
@@ -48,9 +51,13 @@ def get_complaint_cust(id):
 # Add a complaint --- Check for existing complaint
 @app.route('/complaints/', methods = ['POST'])
 def put_complaint():
-	db.session.add(ComplaintJsonSerializer().deserialize(request.json))
-	db.session.commit()
-	return jsonify({'message' : 'Complaint Created Successfully'}), 201
+	try:
+		db.session.add(ComplaintJsonSerializer().deserialize(request.json))
+		db.session.commit()
+	except Exception as e:
+		return jsonify({'message' : 'Complaint Creation Failed'}), 500
+	else:
+		return jsonify({'message' : 'Complaint Created Successfully'}), 201
 
 # Change complaint status
 @app.route('/complaints/<int:id>/status/',methods = ['PUT'])
