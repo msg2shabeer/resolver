@@ -1,6 +1,5 @@
 from resolver import db
 from datetime import datetime
-from resolver.json_serializer import JsonSerializer
 
 
 class User(db.Model):
@@ -21,12 +20,6 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User %r>' % self.user_name
 
-class UserJsonSerializer(JsonSerializer):
-	__attributes__ = ['id', 'name', 'user_name', 'password','user_type_id']
-	__required__ = ['name', 'user_name', 'password', 'user_type_id']
-	__attribute_serializer__ = dict()
-	__object_class__ = User
-
 class UserType(db.Model):
 	'''Table storing category details of users'''
 	id=db.Column(db.Integer, primary_key=True)
@@ -37,13 +30,6 @@ class UserType(db.Model):
 
 	def __repr__(self):
 		return '<User Type %r>' % self.name
-
-class UserTypeJsonSerializer(JsonSerializer):
-	__attributes__ = ['id', 'name']
-	__required__ = ['name']
-	__attribute_serializer__ = dict()
-	__object_class__ = UserType
-		
 
 class Complaint(db.Model):
 	'''Complaints table'''
@@ -83,19 +69,6 @@ class Complaint(db.Model):
 	def __repr__(self):
 		return '<Complaint id:%r p:%r d:%r c_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id)
 
-class ComplaintJsonSerializer(JsonSerializer):
-	__attributes__ = ['id', 'cust_id', 'cust_name', 'cust_address', 'cust_phone',\
-	 'complaint_phone', 'no_calls', 'priority', 'date_time', 'service_id', 'complaint_type_id', 'status_id']
-	__required__ = ['cust_id', 'cust_name', 'cust_address', 'cust_phone',\
-	 'complaint_phone', 'service_id', 'complaint_type_id', 'status_id']
-	__attribute_serializer__ = dict(date_time='date')
-	__object_class__ = Complaint
-
-	def __init__(self, utc_offset=None):
-		if utc_offset:
-			self.__utc_offset__=utc_offset
-
-
 class Service(db.Model):
 	'''Service'''
 
@@ -105,12 +78,6 @@ class Service(db.Model):
 	def __init__(self, name):
 		self.name=name
 
-class ServiceJsonSerializer(JsonSerializer):
-	__attributes__=['id', 'name']
-	__required__=['name']
-	__attribute_serializer__=dict()
-	__object_class__=Service
-		
 class ComplaintType(db.Model):
 	'''ComplaintType'''
 	
@@ -122,13 +89,6 @@ class ComplaintType(db.Model):
 	def __init__(self, name, service_id):
 		self.name=name
 		self.service_id=service_id
-
-class ComplaintTypeJsonSerializer(JsonSerializer):
-	__attributes__=['id', 'name', 'service_id']
-	__required__=['name', 'service_id']
-	__attribute_serializer__=dict()
-	__object_class__=ComplaintType
-		
 		
 class ComplaintStatus(db.Model):
 	'''ComplaintStatus'''
@@ -138,9 +98,3 @@ class ComplaintStatus(db.Model):
 
 	def __init__(self, name):
 		self.name=name
-
-class ComplaintStatusJsonSerializer(JsonSerializer):
-	__attributes__=['id', 'name']
-	__required__=['name']
-	__attribute_serializer__=dict()
-	__object_class__=ComplaintStatus
