@@ -1,0 +1,3 @@
+Session management
+Authentication based on user table
+Security enhancement using OAuth2
