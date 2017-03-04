@@ -33,6 +33,7 @@ class UserSchema(Schema):
 class UserType(db.Model):
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(25))
+	description=db.Column(db.String(100))
 
 	def __init__(self, name):
 		self.name=name
@@ -43,6 +44,7 @@ class UserType(db.Model):
 class UserTypeSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
+	description=fields.Str()
 
 	@post_load
 	def make_user_type(self, data):
@@ -107,6 +109,8 @@ class Service(db.Model):
 
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
+	description=db.Column(db.String(100))
+
 
 	def __init__(self, name):
 		self.name=name
@@ -114,6 +118,7 @@ class Service(db.Model):
 class ServiceSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
+	description=fields.Str()
 
 	@post_load
 	def make_service(self, data):
@@ -123,6 +128,8 @@ class ComplaintType(db.Model):
 	
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
+	description=db.Column(db.String(100))
+
 	service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
 	service=db.relationship('Service', backref=db.backref('complaint_types', lazy='dynamic'))
 	
@@ -134,6 +141,8 @@ class ComplaintTypeSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
 	service_id=fields.Integer()
+	description=fields.Str()
+
 
 	@post_load
 	def make_complaint_type(self, data):
@@ -143,6 +152,8 @@ class ComplaintStatus(db.Model):
 	
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(20), unique=True)
+	description=db.Column(db.String(100))
+
 
 	def __init__(self, name):
 		self.name=name
@@ -150,6 +161,7 @@ class ComplaintStatus(db.Model):
 class ComplaintStatusSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
+	description=fields.Str()
 
 	@post_load
 	def make_complaint_status(self, data):
