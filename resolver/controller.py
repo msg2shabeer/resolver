@@ -1,7 +1,12 @@
 from resolver import app
 from resolver.models import *
 from flask import jsonify,request
-from resolver import db
+from flask_security import Security, SQLAlchemyUserDatastore, login_required
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
 # Home
 @app.route('/')
 def hello_world():
@@ -32,6 +37,49 @@ def put_user():
 		return jsonify({'message' : 'User Creation Failed'}), 500
 	else:
 		return jsonify({'message' :'User Created successfully'}), 201
+
+
+# Get Roles
+@app.route('/roles/', methods=['GET'])
+def get_roles():
+	roles=Role.query.all()
+	return jsonify({'roles' : RoleSchema().dump(roles, many=True).data}), 200
+
+# Get a single Role
+@app.route('/roles/<int:id>/', methods=['GET'])
+def get_roles_by_id(id):
+	role=Role.query.filter_by(id=id).first()
+	if role:
+		return jsonify({'role': RoleSchema().dump(role).data}), 200
+	else:
+		return jsonify({'message' : 'Role Do not Exist with id:'+str(id)}), 500
+
+
+# Add a new role
+@app.route('/roles/', methods = ['POST'])
+def add_role():
+	try:
+		db.session.add(RoleSchema().load(request.json).data)
+		db.session.commit()
+	except Exception as e:
+		return jsonify({'message' : 'Role Creation Failed'}), 500
+	else:
+		return jsonify({'message' :'Role Created successfully'}), 201
+
+# Add a new role to an user
+@app.route('/users/<int:id>/roles/', methods=['PUT'])
+def add_user_role(id):
+	user=User.query.filter_by(id=id).first()
+	if not user:
+		return jsonify({'message' : 'User Role Adding failed, there is no such user'}), 500
+	for r in request.json['roles']:
+		role=Role.query.filter_by(id=r).first()
+		if role:
+			user.roles.append(role)
+	db.session.add(user)
+	db.session.commit()
+	return jsonify({'message' : 'User Role Added Successfully'}), 200
+
 
 # Get all complaints
 @app.route('/complaints/', methods=['GET'])
