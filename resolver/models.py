@@ -1,20 +1,31 @@
 from resolver import db
 from datetime import datetime
 from marshmallow import Schema, fields, post_load
+from flask_security import UserMixin, RoleMixin
+# from resolver import app
 
-class User(db.Model):
+"""If you want to use many-to-many relationships you will need to
+define a helper table that is used for the relationship.
+For this helper table it is strongly recommended to not use a model but an actual table"""
+roles_users = db.Table('roles_users',\
+	db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),\
+	db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
+
+class User(db.Model, UserMixin):
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(25))
 	user_name=db.Column(db.String(20), unique=True)
 	password=db.Column(db.String(40))
-	user_type_id=db.Column(db.Integer,db.ForeignKey('user_type.id'))
-	user_type = db.relationship('UserType',backref=db.backref('users', lazy='dynamic'))
+	active=db.Column(db.Boolean())
+	confirmed_at = db.Column(db.DateTime())
+	roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 	
-	def __init__(self, name, user_name, password, user_type_id):
-		self.name=name
-		self.user_name=user_name
-		self.password=password
-		self.user_type_id=user_type_id
+	# def __init__(self, name, user_name, password, user_type_id):
+	# 	self.name=name
+	# 	self.user_name=user_name
+	# 	self.password=password
+	# 	self.user_type_id=user_type_id
 
 	def __repr__(self):
 		return '<User %r>' % self.user_name
@@ -25,14 +36,17 @@ class UserSchema(Schema):
 	user_name=fields.Str()
 	password=fields.Str()
 	user_type_id=fields.Integer()
+	active=fields.Boolean()
+	confirmed_at=fields.DateTime()
+	roles=fields.Nested('RoleSchema', many=True)
 
 	@post_load
 	def make_user(self, data):
 		return User(**data)
 
-class UserType(db.Model):
+class Role(db.Model, RoleMixin):
 	id=db.Column(db.Integer, primary_key=True)
-	name=db.Column(db.String(25))
+	name=db.Column(db.String(25), unique=True)
 	description=db.Column(db.String(100))
 
 	def __init__(self, name):
@@ -41,14 +55,14 @@ class UserType(db.Model):
 	def __repr__(self):
 		return '<User Type %r>' % self.name
 
-class UserTypeSchema(Schema):
+class RoleSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
 	description=fields.Str()
 
 	@post_load
 	def make_user_type(self, data):
-		return UserType(**data)
+		return Role(**data)
 
 class Complaint(db.Model):
 	id=db.Column(db.Integer, primary_key=True)
@@ -70,22 +84,22 @@ class Complaint(db.Model):
 	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
 	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
 
-	def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id, complaint_type_id, status_id, date_time=None):
-		self.cust_id=cust_id
-		self.cust_name=cust_name
-		self.cust_address=cust_address
-		self.cust_phone=cust_phone
-		self.complaint_phone=complaint_phone
-		self.service_id=service_id
-		self.complaint_type_id=complaint_type_id
-		self.status_id=status_id
-		if date_time is None:
-			date_time=datetime.utcnow()
-		self.date_time=date_time
+	# def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id=None, complaint_type_id=None, status_id=None, date_time=None):
+	# 	self.cust_id=cust_id
+	# 	self.cust_name=cust_name
+	# 	self.cust_address=cust_address
+	# 	self.cust_phone=cust_phone
+	# 	self.complaint_phone=complaint_phone
+	# 	self.service_id=service_id
+	# 	self.complaint_type_id=complaint_type_id
+	# 	self.status_id=status_id
+	# 	if date_time is None:
+	# 		date_time=datetime.utcnow()
+	# 	self.date_time=date_time
 
 
 	def __repr__(self):
-		return '<Complaint id:%r p:%r d:%r c_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id)
+		return '<Complaint id:%r p:%r d:%r c_id:%r status_id:%r>' %(self.id,self.priority,self.date_time,self.cust_id,self.status_id)
 
 class ComplaintSchema(Schema):
 	id=fields.Integer()
@@ -100,6 +114,10 @@ class ComplaintSchema(Schema):
 	service_id=fields.Integer()
 	complaint_type_id=fields.Integer()
 	status_id=fields.Integer()
+
+	service=fields.Nested('ServiceSchema')
+	complaint_type=fields.Nested('ComplaintTypeSchema')
+	status=fields.Nested('ComplaintStatusSchema')
 
 	@post_load
 	def make_complaint(self, data):
