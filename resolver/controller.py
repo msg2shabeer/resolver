@@ -38,6 +38,27 @@ def put_user():
 	else:
 		return jsonify({'message' :'User Created successfully'}), 201
 
+# Activate/Deactivate a user
+# Eg: /users/1/activate/1 --> activates a user
+# Eg: /users/1/activate/0 --> deactivates a user
+@app.route('/users/<int:id>/activate/', methods = ['PUT'])
+def activate_user(id):
+	act=request.json['activate_flag']
+	msg='User Deativated'
+	user=User.query.filter_by(id=id).first()
+	if not user:
+		return jsonify({'message': 'No Such User'}), 500
+	try:
+		user.active=False
+		if act:
+			user.active=True
+			msg='User Activated'
+		db.session.add(user)
+		db.session.commit()
+	except Exception as e:
+		return jsonify({'message': 'User Activation Failed'}), 500
+	return jsonify({'message': msg}), 201
+
 
 # Get Roles
 @app.route('/roles/', methods=['GET'])
