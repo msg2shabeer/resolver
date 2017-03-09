@@ -37,4 +37,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS=True
 # Setting the timezone UTC Offset for serializing the date and time
 UTC_OFFSET=dict(hours=5, minutes=30)
 
+# Disables login functionality for testing
+LOGIN_DISABLED=False
+
 
