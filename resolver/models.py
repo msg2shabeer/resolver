@@ -49,8 +49,8 @@ class Role(db.Model, RoleMixin):
 	name=db.Column(db.String(25), unique=True)
 	description=db.Column(db.String(100))
 
-	def __init__(self, name):
-		self.name=name
+	# def __init__(self, name):
+	# 	self.name=name
 
 	def __repr__(self):
 		return '<User Type %r>' % self.name
@@ -130,8 +130,8 @@ class Service(db.Model):
 	description=db.Column(db.String(100))
 
 
-	def __init__(self, name):
-		self.name=name
+	# def __init__(self, name):
+	# 	self.name=name
 
 class ServiceSchema(Schema):
 	id=fields.Integer()
@@ -151,9 +151,9 @@ class ComplaintType(db.Model):
 	service_id=db.Column(db.Integer, db.ForeignKey('service.id'))
 	service=db.relationship('Service', backref=db.backref('complaint_types', lazy='dynamic'))
 	
-	def __init__(self, name, service_id):
-		self.name=name
-		self.service_id=service_id
+	# def __init__(self, name, service_id):
+	# 	self.name=name
+	# 	self.service_id=service_id
 
 class ComplaintTypeSchema(Schema):
 	id=fields.Integer()
@@ -173,8 +173,8 @@ class ComplaintStatus(db.Model):
 	description=db.Column(db.String(100))
 
 
-	def __init__(self, name):
-		self.name=name
+	# def __init__(self, name):
+	# 	self.name=name
 
 class ComplaintStatusSchema(Schema):
 	id=fields.Integer()
