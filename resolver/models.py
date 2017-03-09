@@ -15,7 +15,7 @@ roles_users = db.Table('roles_users',\
 class User(db.Model, UserMixin):
 	id=db.Column(db.Integer, primary_key=True)
 	name=db.Column(db.String(25))
-	user_name=db.Column(db.String(20), unique=True)
+	email=db.Column(db.String(20), unique=True)
 	password=db.Column(db.String(40))
 	active=db.Column(db.Boolean())
 	confirmed_at = db.Column(db.DateTime())
@@ -28,12 +28,12 @@ class User(db.Model, UserMixin):
 	# 	self.user_type_id=user_type_id
 
 	def __repr__(self):
-		return '<User %r>' % self.user_name
+		return '<User %r>' % self.email
 
 class UserSchema(Schema):
 	id=fields.Integer()
 	name=fields.Str()
-	user_name=fields.Str()
+	email=fields.Str()
 	password=fields.Str()
 	user_type_id=fields.Integer()
 	active=fields.Boolean()
