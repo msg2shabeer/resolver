@@ -18,11 +18,15 @@ DATABASE_CONNECT_OPTIONS = {}
 THREADS_PER_PAGE = 2
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
-CSRF_ENABLED     = True
+# CSRF_ENABLED     = True
 
 # Use a secure, unique and absolutely secret key for
 # signing the data. 
-CSRF_SESSION_KEY = "secret"
+# CSRF_SESSION_KEY = "secret"
+
+# Without this get_auth_token via POST request w/ JSON data does not work
+# You keep getting "CSRF token missing" error
+WTF_CSRF_ENABLED = False
 
 # Secret key for signing cookies
 SECRET_KEY = '\xdc\xd7\xab\xe8\xeb\x06\xb8\x7f5\xc7\xf4\xe3\xfa\xa6\xe4.\x1f\xcfTR.\xd8.K'
