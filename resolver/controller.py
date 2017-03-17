@@ -1,6 +1,7 @@
 from resolver import app
 from resolver.models import *
-from flask import jsonify,request
+from flask import request
+from flask_jsonpify import jsonify
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
 
 # Setup Flask-Security

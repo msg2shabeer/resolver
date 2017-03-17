@@ -13,3 +13,4 @@ SQLAlchemy
 Werkzeug
 marshmallow
 flask_security
+flask-jsonpify

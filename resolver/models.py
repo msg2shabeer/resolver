@@ -79,7 +79,7 @@ class Complaint(db.Model):
 	service=db.relationship('Service', backref=db.backref('complaints', lazy='dynamic'))
 	
 	complaint_type_id=db.Column(db.Integer, db.ForeignKey('complaint_type.id'))
-	compaint_type=db.relationship('ComplaintType', backref=db.backref('complaints', lazy='dynamic'))
+	complaint_type=db.relationship('ComplaintType', backref=db.backref('complaints', lazy='dynamic'))
 	
 	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
 	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
