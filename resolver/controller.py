@@ -148,3 +148,9 @@ def change_complaint_status(id):
 	db.session.add(complaint)
 	db.session.commit()
 	return jsonify({'message' : 'Complaint Status Changed Successfully'}), 200
+
+# Get services list
+@app.route('/services/',methods= ['GET'])
+def get_services():
+	services=Service.query.all()
+	return jsonify({'services' : ServiceSchema().dump(services, many=True).data}), 200
