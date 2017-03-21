@@ -154,3 +154,9 @@ def change_complaint_status(id):
 def get_services():
 	services=Service.query.all()
 	return jsonify({'services' : ServiceSchema().dump(services, many=True).data}), 200
+
+# Get complainttype list
+@app.route('/complainttypes/',methods= ['GET'])
+def get_complaint_type():
+	complainttypes=ComplaintType.query.all()
+	return jsonify({'complaint_types' : ComplaintTypeSchema().dump(complainttypes, many=True).data}), 200
