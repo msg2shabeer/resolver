@@ -84,6 +84,9 @@ class Complaint(db.Model):
 	status_id=db.Column(db.Integer, db.ForeignKey('complaint_status.id'))
 	status=db.relationship('ComplaintStatus', backref=db.backref('complaints', lazy='dynamic'))
 
+	source_id=db.Column(db.Integer, db.ForeignKey('complaint_source.id'))
+	source=db.relationship('ComplaintSource', backref=db.backref('complaints', lazy='dynamic'))
+
 	# def __init__(self, cust_id, cust_name, cust_address, cust_phone, complaint_phone, service_id=None, complaint_type_id=None, status_id=None, date_time=None):
 	# 	self.cust_id=cust_id
 	# 	self.cust_name=cust_name
@@ -114,10 +117,12 @@ class ComplaintSchema(Schema):
 	service_id=fields.Integer()
 	complaint_type_id=fields.Integer()
 	status_id=fields.Integer()
+	source_id=fields.Integer()
 
 	service=fields.Nested('ServiceSchema')
 	complaint_type=fields.Nested('ComplaintTypeSchema')
 	status=fields.Nested('ComplaintStatusSchema')
+	source=fields.Nested('ComplaintSourceSchema')
 
 	@post_load
 	def make_complaint(self, data):
@@ -184,3 +189,18 @@ class ComplaintStatusSchema(Schema):
 	@post_load
 	def make_complaint_status(self, data):
 		return ComplaintStatus(**data)
+
+class ComplaintSource(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(20), unique=True)
+	description = db.Column(db.String(100))
+
+class ComplaintSourceSchema(Schema):
+	id=fields.Integer()
+	name=fields.Str()
+	description=fields.Str()
+
+	@post_load
+	def make_complaint_source(self, data):
+		return ComplaintSource(**data)
