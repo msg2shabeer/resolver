@@ -160,3 +160,9 @@ def get_services():
 def get_complaint_type():
 	complainttypes=ComplaintType.query.all()
 	return jsonify({'complaint_types' : ComplaintTypeSchema().dump(complainttypes, many=True).data}), 200
+
+# Get complaintsource list
+@app.route('/complaintsources/',methods= ['GET'])
+def get_complaint_type():
+	complaintsources=ComplaintSource.query.all()
+	return jsonify({'complaint_sources' : ComplaintSourceSchema().dump(complaintsources, many=True).data}), 200
